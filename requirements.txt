@@ -1,4 +1,2 @@
 flask
 python-pptx
-pillow
-requests
