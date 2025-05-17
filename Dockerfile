@@ -15,4 +15,4 @@ ENV PORT 8000
 EXPOSE 8000
 
 # 2 workers, 1 thread each；可按需调整
-CMD ["gunicorn", "-w", "2", "-k", "gthread", "--threads", "1", "-b", "0.0.0.0:${PORT}", "app:app"]
+CMD sh -c 'gunicorn -w 2 -k gthread --threads 1 -b 0.0.0.0:${PORT:-8000} app:app'
