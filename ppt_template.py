@@ -93,7 +93,7 @@ def create_job_summary_slide(prs, title, items):
         txt_frame.margin_left = 0
         txt_frame.margin_right = 0
 
-def create_job_summary_ppt(title, items, output_path="output.pptx"):
+def create_pptx(slides_data, output_path="output.pptx"):
     prs = Presentation()
     # 16:9
     prs.slide_width = Inches(13.33)
