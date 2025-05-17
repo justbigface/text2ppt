@@ -4,21 +4,21 @@ from ppt_template import create_pptx
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
-    return "PPT服务运行中"
+@app.get("/")
+def health():
+    return "OK", 200
 
-@app.route('/generate_ppt', methods=['POST'])
+@app.post("/generate_ppt")
 def generate_ppt():
     try:
-        data = request.get_json()
-        slides_data = data['slides']
-        output_path = "output.pptx"
-        ppt_path = create_pptx(slides_data, output_path)
+        data = request.get_json(force=True)
+        slides = data["slides"]
+        ppt_path = create_pptx(slides, "output.pptx")
         return send_file(ppt_path, as_attachment=True)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 8000))
+    # 不开 debug，交给 Gunicorn 统一管理
+    app.run(host="0.0.0.0", port=port)

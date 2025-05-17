@@ -1,11 +1,18 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
+
+# 更快的安装 & 字体支持（可选）
+RUN apt-get update && apt-get install -y \
+    fonts-dejavu-core && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 5000
-CMD ["python", "app.py"]
+# 默认用 $PORT，Zeabur/Render/Heroku 都兼容
+ENV PORT 8000
+EXPOSE 8000
+
+# 2 workers, 1 thread each；可按需调整
+CMD ["gunicorn", "-w", "2", "-k", "gthread", "--threads", "1", "-b", "0.0.0.0:${PORT}", "app:app"]
