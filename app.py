@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, jsonify, send_file
-from ppt_template import create_pptx
+from ppt_template import create_job_summary_ppt
 
 app = Flask(__name__)
 
@@ -11,14 +11,12 @@ def home():
 @app.route('/generate_ppt', methods=['POST'])
 def generate_ppt():
     """
-    请求体示例:
+    请求体示例 (新样式):
     {
-        "slides": [
-            {
-                "title": "第一页标题",
-                "content": "第一页内容",
-                "img_url": " `https://example.com/image.jpg` "  # 可选
-            },
+        "title": "演示文稿标题",
+        "items": [
+            {"num": "01", "subtitle": "项目推进", "desc": "这里写推进描述……"},
+            {"num": "02", "subtitle": "项目成果", "desc": "这里写成果描述……"},
             ...
         ],
         "output_path": "custom_name.pptx"  # 可选
@@ -26,14 +24,15 @@ def generate_ppt():
     """
     try:
         data = request.get_json(force=True)
-        slides_data = data['slides']
+        title = data['title']
+        items = data['items']
         output_path = data.get('output_path', 'output.pptx')
 
         # 保证文件保存到当前目录下
         output_path = os.path.basename(output_path)
         output_path = os.path.join(os.path.dirname(__file__), output_path)
 
-        ppt_path = create_pptx(slides_data, output_path)
+        ppt_path = create_job_summary_ppt(title, items, output_path)
 
         return send_file(
             ppt_path,
