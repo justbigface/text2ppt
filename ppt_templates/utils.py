@@ -1,5 +1,7 @@
 from pptx.enum.shapes import MSO_SHAPE
 from pptx.dml.color import RGBColor
+from pptx.enum.text import PP_ALIGN
+from pptx.util import Pt
 import os
 import requests
 from urllib.parse import urlparse
