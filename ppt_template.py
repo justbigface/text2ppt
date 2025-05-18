@@ -165,13 +165,3 @@ def create_job_summary_ppt(title, items, output_path="output.pptx"):
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
     prs.save(output_path)
     return output_path
-
-
-功能亮点说明
-内容太多自动拆分卡片 （如“03-1”、“03-2”……），每张卡片不会溢出。
-高度、字号自动调整 ，短内容高大，长内容瘦小，尽可能适配不溢出。
-底部留白1英寸 ，方便后续加字幕。
-自动分页 ，每页放得下就放，超了就新页。
-
-如需进一步 自定义分割方式、段落格式等 ，欢迎补充你的需求！
-如果还有其它自适应“美化”想法，也可以直接提！
