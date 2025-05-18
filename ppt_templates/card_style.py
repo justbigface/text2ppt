@@ -96,3 +96,72 @@ def add_card_item(slide, top, num, subtitle, desc, card_height, font_size):
     p.font.size = font_size
     p.font.color.rgb = RGBColor(50, 50, 50)
     p.alignment = PP_ALIGN.LEFT
+
+def create_card_ppt(title, items, output_path="output.pptx"):
+    prs = Presentation()
+    prs.slide_width = PAGE_WIDTH
+    prs.slide_height = PAGE_HEIGHT
+
+    new_items = []
+    # 先处理超长内容：自动切分成多卡片
+    for item in items:
+        desc = item.get("desc", "")
+        subtitle = item.get("subtitle", "")
+        num = item.get("num", "")
+        # 拆分desc
+        desc_chunks = split_desc_to_chunks(desc)
+        for i, chunk in enumerate(desc_chunks):
+            _num = f"{num}-{i+1}" if len(desc_chunks) > 1 else num
+            new_items.append({
+                "num": _num,
+                "subtitle": subtitle if i == 0 else "",  # 仅第1张显示副标题
+                "desc": chunk
+            })
+    items = new_items
+
+    # 计算每页能容纳的卡片数
+    avail_height = PAGE_HEIGHT - TOP_MARGIN - BOTTOM_MARGIN
+    idx = 0
+    total = len(items)
+    slide = None
+    row = 0
+    used_height = 0
+    while idx < total:
+        if slide is None or used_height + CARD_MIN_HEIGHT > avail_height:
+            # 新建幻灯片
+            slide = prs.slides.add_slide(prs.slide_layouts[5])
+            used_height = 0
+            row = 0
+            # 只在第一页加标题
+            if len(prs.slides) == 1:
+                title_box = slide.shapes.add_textbox(Inches(1), Inches(0.3), Inches(11), Inches(1))
+                title_frame = title_box.text_frame
+                title_frame.text = title
+                p = title_frame.paragraphs[0]
+                p.font.size = Pt(40)
+                p.font.bold = True
+                p.alignment = PP_ALIGN.LEFT
+
+        item = items[idx]
+        # 估算高度和字号
+        card_height, font_size = estimate_card_height_and_font(item["desc"])
+        # 防止最后一条超页高，强制拆分
+        if used_height + card_height > avail_height:
+            slide = None
+            continue
+        top = TOP_MARGIN + used_height
+        add_card_item(
+            slide,
+            top=top,
+            num=item.get("num", idx + 1),
+            subtitle=item.get("subtitle", ""),
+            desc=item.get("desc", ""),
+            card_height=card_height,
+            font_size=font_size
+        )
+        used_height += card_height + CARD_SPACING
+        idx += 1
+
+    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
+    prs.save(output_path)
+    return output_path

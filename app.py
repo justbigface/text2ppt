@@ -1,6 +1,10 @@
 import os
 from flask import Flask, request, jsonify, send_file
-from ppt_template import create_job_summary_ppt
+from ppt_templates.card_style import create_card_ppt
+from ppt_templates.triple_column import create_triple_column_ppt
+from ppt_templates.image_right import create_image_right_ppt
+from ppt_templates.icons_grid import create_icons_grid_ppt
+from ppt_templates.cover_big_image import create_cover_big_image_ppt
 
 app = Flask(__name__)
 
@@ -32,7 +36,24 @@ def generate_ppt():
         output_path = os.path.basename(output_path)
         output_path = os.path.join(os.path.dirname(__file__), output_path)
 
-        ppt_path = create_job_summary_ppt(title, items, output_path)
+        template_style = data.get('template', 'card') # 默认使用card模板
+
+        if template_style == 'card':
+            ppt_path = create_card_ppt(title, items, output_path=output_path)
+        elif template_style == 'triple_column':
+            ppt_path = create_triple_column_ppt(title, items, output_path=output_path)
+        elif template_style == 'image_right':
+            # 假设image_right模板需要img_path参数，从kwargs中获取或使用默认值
+            img_path = data.get('img_path', 'your_default_image.jpg')
+            ppt_path = create_image_right_ppt(title, items, output_path=output_path, img_path=img_path)
+        elif template_style == 'icons_grid':
+            ppt_path = create_icons_grid_ppt(title, items, output_path=output_path)
+        elif template_style == 'cover_big_image':
+            subtitle = data.get('subtitle', '')
+            img = data.get('img')
+            ppt_path = create_cover_big_image_ppt(title, subtitle=subtitle, img=img, output_path=output_path)
+        else:
+            return jsonify({'error': f'Unknown template style: {template_style}'}), 400
 
         return send_file(
             ppt_path,
