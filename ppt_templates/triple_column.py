@@ -1,6 +1,8 @@
 from pptx import Presentation
 from pptx.util import Pt, Inches
 from pptx.dml.color import RGBColor
+from pptx.enum.text import PP_ALIGN
+from .utils import get_img_path, add_placeholder_shape
 
 def create_triple_column_ppt(title, items, output_path="output.pptx"):
     prs = Presentation()
@@ -37,7 +39,12 @@ def create_triple_column_ppt(title, items, output_path="output.pptx"):
         item = items[idx]
         left = start_left + idx * (card_width + spacing)
         # 图片框
-        slide.shapes.add_picture("your_default_image.jpg", left, top_img, card_width, img_height)
+        img_url = item.get("img", "")
+        img_path = get_img_path(img_url)
+        if os.path.exists(img_path):
+            slide.shapes.add_picture(img_path, left, top_img, card_width, img_height)
+        else:
+            add_placeholder_shape(slide, left, top_img, card_width, img_height)
         # 小标题
         sub_box = slide.shapes.add_textbox(left, text_top, card_width, Inches(0.5))
         sub_frame = sub_box.text_frame

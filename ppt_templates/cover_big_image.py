@@ -2,6 +2,8 @@ from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.enum.text import PP_ALIGN
 from pptx.dml.color import RGBColor
+from .utils import get_img_path, add_placeholder_shape
+import os
 
 def create_cover_big_image_ppt(title, subtitle="", img=None, output_path="output.pptx"):
     prs = Presentation()
@@ -11,7 +13,11 @@ def create_cover_big_image_ppt(title, subtitle="", img=None, output_path="output
 
     # 大图
     if img:
-        slide.shapes.add_picture(img, 0, 0, prs.slide_width, prs.slide_height)
+        img_path = get_img_path(img)
+        if os.path.exists(img_path):
+            slide.shapes.add_picture(img_path, 0, 0, prs.slide_width, prs.slide_height)
+        else:
+            add_placeholder_shape(slide, 0, 0, prs.slide_width, prs.slide_height, "No Cover Image")
 
     # 标题居中遮罩
     box_w = Inches(10)

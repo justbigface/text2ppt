@@ -1,6 +1,9 @@
 from pptx import Presentation
 from pptx.util import Pt, Inches
 from pptx.dml.color import RGBColor
+from pptx.enum.text import PP_ALIGN
+from .utils import get_img_path, add_placeholder_shape
+import os
 
 def create_image_right_ppt(title, items, output_path="output.pptx", img_path="your_default_image.jpg"):
     prs = Presentation()
@@ -23,7 +26,11 @@ def create_image_right_ppt(title, items, output_path="output.pptx", img_path="yo
     fill.fore_color.rgb = RGBColor(0,0,0)
 
     # 右侧大图片
-    slide.shapes.add_picture(img_path, Inches(8), Inches(2), Inches(4.5), Inches(3.7))
+    img_path = get_img_path(img_path)
+    if os.path.exists(img_path):
+        slide.shapes.add_picture(img_path, Inches(8), Inches(2), Inches(4.5), Inches(3.7))
+    else:
+        add_placeholder_shape(slide, Inches(8), Inches(2), Inches(4.5), Inches(3.7))
 
     # 左侧内容区
     main_left = Inches(0.8)
