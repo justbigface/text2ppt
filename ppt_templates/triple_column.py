@@ -1,7 +1,7 @@
 from pptx import Presentation
 from pptx.util import Pt, Inches
 from pptx.dml.color import RGBColor
-from pptx.enum.text import PP_ALIGN
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from .utils import get_img_path, add_placeholder_shape
 import os
 
