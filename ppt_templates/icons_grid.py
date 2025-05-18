@@ -1,6 +1,6 @@
 from pptx import Presentation
 from pptx.util import Inches, Pt
-from pptx.enum.text import PP_ALIGN
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.dml.color import RGBColor
 
 def create_icons_grid_ppt(title, items, output_path="output.pptx"):
@@ -12,6 +12,8 @@ def create_icons_grid_ppt(title, items, output_path="output.pptx"):
     # 标题
     title_box = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(11.5), Inches(1))
     title_frame = title_box.text_frame
+    title_frame.word_wrap = True
+    title_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
     title_frame.text = title
     p = title_frame.paragraphs[0]
     p.font.size = Pt(38)
@@ -38,6 +40,8 @@ def create_icons_grid_ppt(title, items, output_path="output.pptx"):
         icon_text = item.get("icon", "●")
         icon_box = slide.shapes.add_textbox(left, top, cell_w, Inches(0.6))
         icon_frame = icon_box.text_frame
+        icon_frame.word_wrap = True
+        icon_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
         icon_frame.text = icon_text
         p = icon_frame.paragraphs[0]
         p.font.size = Pt(38)
@@ -47,6 +51,8 @@ def create_icons_grid_ppt(title, items, output_path="output.pptx"):
         # 标题
         sub_box = slide.shapes.add_textbox(left, top + Inches(0.7), cell_w, Inches(0.3))
         sub_frame = sub_box.text_frame
+        sub_frame.word_wrap = True
+        sub_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
         sub_frame.text = item.get("subtitle", "")
         p = sub_frame.paragraphs[0]
         p.font.size = Pt(18)
@@ -56,6 +62,8 @@ def create_icons_grid_ppt(title, items, output_path="output.pptx"):
         # 描述
         desc_box = slide.shapes.add_textbox(left, top + Inches(1.1), cell_w, Inches(0.8))
         desc_frame = desc_box.text_frame
+        desc_frame.word_wrap = True
+        desc_frame.vertical_anchor = MSO_ANCHOR.TOP
         desc_frame.text = item.get("desc", "")
         p = desc_frame.paragraphs[0]
         p.font.size = Pt(14)

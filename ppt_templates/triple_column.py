@@ -18,12 +18,14 @@ def create_triple_column_ppt(title, items, output_path="output.pptx"):
     # 标题
     title_box = slide.shapes.add_textbox(Inches(4.5), Inches(1), Inches(4), Inches(1))
     title_frame = title_box.text_frame
+    title_frame.word_wrap = True
+    title_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
     title_frame.text = title
     p = title_frame.paragraphs[0]
     p.font.size = Pt(40)
     p.font.bold = True
     p.font.color.rgb = RGBColor(0, 0, 0)
-    p.alignment = 1  # Center
+    p.alignment = PP_ALIGN.CENTER
 
     # 三列坐标和宽高
     card_width = Inches(3.3)
@@ -49,19 +51,25 @@ def create_triple_column_ppt(title, items, output_path="output.pptx"):
         # 小标题
         sub_box = slide.shapes.add_textbox(left, text_top, card_width, Inches(0.5))
         sub_frame = sub_box.text_frame
+        sub_frame.word_wrap = True
+        sub_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
         sub_frame.text = item.get("subtitle", "")
         p = sub_frame.paragraphs[0]
         p.font.size = Pt(22)
         p.font.bold = True
         p.font.color.rgb = RGBColor(0, 0, 0)
+        p.alignment = PP_ALIGN.CENTER
 
         # 描述
         desc_box = slide.shapes.add_textbox(left, text_top + Inches(0.5), card_width, Inches(1.2))
         desc_frame = desc_box.text_frame
+        desc_frame.word_wrap = True
+        desc_frame.vertical_anchor = MSO_ANCHOR.TOP
         desc_frame.text = item.get("desc", "")
         p = desc_frame.paragraphs[0]
         p.font.size = Pt(14)
         p.font.color.rgb = RGBColor(60, 60, 60)
+        p.alignment = PP_ALIGN.CENTER
 
     # 加下划线/圆点可选
     # slide.shapes.add_shape(...) 画线和圆点
