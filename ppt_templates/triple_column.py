@@ -3,6 +3,7 @@ from pptx.util import Pt, Inches
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
 from .utils import get_img_path, add_placeholder_shape
+import os
 
 def create_triple_column_ppt(title, items, output_path="output.pptx"):
     prs = Presentation()
