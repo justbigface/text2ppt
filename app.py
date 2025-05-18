@@ -36,9 +36,9 @@ def generate_ppt():
         output_path = os.path.basename(output_path)
         output_path = os.path.join(os.path.dirname(__file__), output_path)
 
-        template_style = data.get('template', 'card') # 默认使用card模板
+        template_style = data.get('template', 'card_style') # 默认使用card_style模板
 
-        if template_style == 'card':
+        if template_style == 'card_style':
             ppt_path = create_card_ppt(title, items, output_path=output_path)
         elif template_style == 'triple_column':
             ppt_path = create_triple_column_ppt(title, items, output_path=output_path)
